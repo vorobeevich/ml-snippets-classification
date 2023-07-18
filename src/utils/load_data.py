@@ -18,6 +18,7 @@ def load_data(
     data = pd.read_csv(path, sep)
     data = data.dropna()
     data = data[data['marks'].isin(marks)]
+    # non defined classes
     data = data[(data['graph_vertex_id'] != 53) &
                 (data['graph_vertex_id'] != 84)]
     return data
