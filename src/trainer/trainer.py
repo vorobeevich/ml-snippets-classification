@@ -172,7 +172,7 @@ class Trainer:
             if self.scheduler is not None:
                 self.scheduler.step()
 
-            with open(f"{self.checkpoint_dir}logs.txt", "wa") as f:
+            with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
                 print(f"Epoch number {i}. Train f1: {train_metrics['f1']}. Val f1: {val_metrics['f1']}", file=f)
 
         self.load_checkpoint()
