@@ -155,7 +155,7 @@ class Trainer:
         self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
         
-        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=int(len(train_loader.dataset) / self.batch_size) * int(self.num_epochs / 10), num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
         max_val_accuracy = 0
 
         for i in range(1, self.num_epochs + 1):
