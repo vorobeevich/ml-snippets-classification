@@ -150,6 +150,10 @@ class Trainer:
             format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S',
         )
+
+        with open(f"{self.checkpoint_dir}logs.txt", "w") as f:
+            print("F1 history:")
+
         self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
         max_val_accuracy = 0
@@ -167,6 +171,9 @@ class Trainer:
 
             if self.scheduler is not None:
                 self.scheduler.step()
+
+            with open(f"{self.checkpoint_dir}logs.txt", "wa") as f:
+                print(f"Epoch number {i}. Train f1: {train_metrics['f1']}. Val f1: {val_metrics['f1']}", file=f)
 
         self.load_checkpoint()
         test_metrics = self.inference_epoch_model(test_loader)
