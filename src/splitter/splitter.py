@@ -8,24 +8,20 @@ class Splitter:
     Predictions are made by a user-specified model (only BERT arhitechture).
     """
 
-    TOO_MANY_LINES = 3
-    IMPOSSIBLE_TO_SPLIT = -1
-    NO_SPLIT = []
-
     def __init__(self, model, tokenizer, device):
         self.model = model
         self.tokenizer = tokenizer
         self.device = device
+    
+    def set_max_lines(self, max_lines):
+        self.max_lines = max_lines
 
     def processing(self, snippet: str):
         """Converts the snippet into a format that can be send into the model with the BERT architecture."""
         sentence = [snippet]
         rew = self.tokenizer.batch_encode_plus(
             sentence,
-            add_special_tokens=True,
-            padding=True,
-            truncation=True,
-            return_tensors='pt')
+            add_special_tokens=True, padding='max_length', truncation=True, return_tensors='pt', max_length=512)
         return rew['input_ids'].to(
             self.device), rew['attention_mask'].to(
             self.device)
@@ -33,16 +29,14 @@ class Splitter:
     def predict_subsnippet_proba(self, snippet: str) -> float:
         """Returns the probability of the snippet belonging to the predicted class."""
         return float(
-            self.model(
-                *
-                self.processing(snippet))['logits'].softmax(
-                dim=1).max(
-                dim=1).values)
+            self.model(*self.processing(snippet))['logits'].softmax(
+                dim=-1).max(
+                dim=-1).values.item())
 
     def predict_subsnippet_class(self, snippet: str) -> int:
         """Returns the class of the snippet predicted by the model."""
         return int(self.model(*self.processing(snippet))
-                   ['logits'].argmax(dim=1).view((-1, 1)) + 1)
+                   ['logits'].argmax(dim=-1).view((-1, 1)).item())
 
     def check_splitted_substr(self, substr: str) -> bool:
         """Checks that the string is a valid set of code without unclosed parentheses."""
@@ -148,7 +142,7 @@ class Splitter:
         indexes = [i for i in range(len(snippet)) if snippet[i] == '\n']
         indexes = sorted(list(set(indexes) - set((0, len(snippet) - 1))))
         if len(indexes) < n_splits - 1:
-            return Splitter.NO_SPLIT
+            return []
         all_splits = list(map(list, combinations(indexes, n_splits - 1)))
         return self.find_best_split(snippet, all_splits)
 
@@ -156,18 +150,16 @@ class Splitter:
         """Finds the best split among all splits of snippet.
 
         Args:
-            snippet: Input str. Snippet can be split any number of snippets, splitting occurs on the \n character.
+            snippet: Input str. Snippet can be split to any number of snippets, splitting occurs on the \n character.
 
         Returns:
             Best split. The one whose minimum probability is maximum is searched
             for - and if the minimum probability coincides, the average probability is compared.
         """
         all_n_splits = list(range(1, snippet.count('\n') + 2))
-
-        if len(all_n_splits) > Splitter.TOO_MANY_LINES or len(
+        if len(all_n_splits) > self.max_lines or len(
                 all_n_splits) == 0:
-            return Splitter.NO_SPLIT
-
+            return []
         best_splits = [self.split_by_n(snippet, n_splits)
                        for n_splits in all_n_splits]
         return self.find_best_split(snippet, best_splits)

@@ -1,0 +1,1 @@
+from src.splitter.splitter import Splitter
