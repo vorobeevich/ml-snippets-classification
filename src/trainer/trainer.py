@@ -62,8 +62,6 @@ class Trainer:
         self.model = Parser.init_model(self.model_name, self.dataset["kwargs"]["num_classes"], self.device)
         self.optimizer = Parser.init_optimizer(
             self.optimizer_config, self.model)
-        self.scheduler = Parser.init_scheduler(
-            self.scheduler_config, self.optimizer)
 
     def train_epoch_model(self, loader):
         self.model.train()
