@@ -15,7 +15,7 @@ optimizer:
   kwargs:
     lr: 0.00005
 scheduler: null
-num_epochs: 1
+num_epochs: 20
 batch_size: 8
 seed: 42
 run_id: markup_data_codebert_on_5
