@@ -152,7 +152,7 @@ class Trainer:
         )
 
         with open(f"{self.checkpoint_dir}logs.txt", "w") as f:
-            print("F1 history:")
+            print("F1 history:", file=f)
 
         self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
