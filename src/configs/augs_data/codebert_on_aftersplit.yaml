@@ -14,7 +14,6 @@ optimizer:
   name: AdamW
   kwargs:
     lr: 0.00005
-scheduler: null
 num_epochs: 20
 batch_size: 8
 seed: 42

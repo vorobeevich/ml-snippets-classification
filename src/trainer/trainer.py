@@ -13,6 +13,8 @@ from src.parser import Parser
 import src.datasets
 from src.utils import init_object
 
+from transformers.optimization import get_linear_scheduler_with_warmup
+
 class Trainer:
     """Class for training the model in the domain generalization mode.
     """
@@ -23,7 +25,6 @@ class Trainer:
             device,
             model_name,
             optimizer_config,
-            scheduler_config,
             dataset,
             train_marks,
             additional_data,
@@ -41,7 +42,6 @@ class Trainer:
         self.additional_data = additional_data
         self.loss_function = nn.CrossEntropyLoss()
         self.optimizer_config = optimizer_config
-        self.scheduler_config = scheduler_config
 
         self.num_epochs = num_epochs
         self.batch_size = batch_size
@@ -78,6 +78,7 @@ class Trainer:
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+            self.scheduler.step()
             loss_sum += loss.item() * input_ids.shape[0]
             true_labels += labels.tolist()
             pred_labels += logits.argmax(dim=-1).tolist()
@@ -154,8 +155,9 @@ class Trainer:
         with open(f"{self.checkpoint_dir}logs.txt", "w") as f:
             print("F1 history:", file=f)
 
-        self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
+        self.init_training()
+        self.scheduler = get_linear_scheduler_with_warmup(self.optimizer, num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
         max_val_accuracy = 0
 
         for i in range(1, self.num_epochs + 1):

@@ -42,8 +42,7 @@ class Parser:
             trainer_params[param] = config[param]
         trainer_params["dataset"]["kwargs"]["seed"] = config["seed"]
 
-        for param in ["optimizer", "scheduler"]:
-            trainer_params[f"{param}_config"] = config[param]
+        trainer_params["optimizer_config"] = config["optimizer"]
 
         # init run_id
         if config["run_id"] is None:
@@ -97,16 +96,3 @@ class Parser:
         optimizer = init_object(torch.optim, optimizer)
 
         return optimizer
-
-    @staticmethod
-    def init_scheduler(config, optimizer):
-        if config is None:
-            return None
-        # make deepcopy to not corrupt dict
-        scheduler = deepcopy(config)
-
-        # init scheduler with optimizer params
-        scheduler["kwargs"].update(optimizer=optimizer)
-        scheduler = init_object(torch.optim.lr_scheduler, scheduler)
-
-        return scheduler
