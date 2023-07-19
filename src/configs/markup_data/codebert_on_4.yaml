@@ -3,8 +3,12 @@ model_name: codebert
 dataset: 
   name: code4ml
   kwargs: 
+    path: data/code4ml/markup_data.csv
     marks: [5]
     num_classes: 65
+
+train_marks: [4] # use only for train, for val and test only mark 5 data is used
+additional_data: null
 
 optimizer:
   name: AdamW
@@ -14,4 +18,4 @@ scheduler: null
 num_epochs: 1
 batch_size: 8
 seed: 42
-run_id: clear_data_codebert
+run_id: markup_data_codebert_on_4

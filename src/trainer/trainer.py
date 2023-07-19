@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import logging
+from copy import deepcopy
 
 import torch.utils.data
 import torch.nn.functional as F
@@ -9,6 +10,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 from src.datasets import create_datasets
 from src.parser import Parser
+import src.datasets
+from src.utils import init_object
 
 class Trainer:
     """Class for training the model in the domain generalization mode.
@@ -22,6 +25,8 @@ class Trainer:
             optimizer_config,
             scheduler_config,
             dataset,
+            train_marks,
+            additional_data,
             num_epochs,
             batch_size,
             run_id):
@@ -32,6 +37,8 @@ class Trainer:
         self.model_name = model_name
 
         self.dataset = dataset
+        self.train_marks = train_marks
+        self.additional_data = additional_data
         self.loss_function = nn.CrossEntropyLoss()
         self.optimizer_config = optimizer_config
         self.scheduler_config = scheduler_config
@@ -99,6 +106,28 @@ class Trainer:
 
     def create_loaders(self):
         train_dataset, val_dataset, test_dataset = create_datasets(self.dataset)
+        assert self.train_marks != [] or self.additional_data, "You must choose data to train"
+        if self.train_marks != [5] and self.train_marks != []:  
+            new_train_dataset = deepcopy(self.dataset)
+            new_train_dataset["kwargs"]["marks"] = [elem for elem in self.train_marks if elem != 5]
+            new_train_dataset["kwargs"]["dataset_type"] = "all"
+            new_train_dataset = init_object(src.datasets, new_train_dataset)
+            if 5 in self.train_marks:
+                train_dataset = torch.utils.data.ConcatDataset([train_dataset, new_train_dataset])
+            else:
+                train_dataset = new_train_dataset
+        
+        if self.additional_data:
+            additional_dataset = deepcopy(self.dataset)
+            additional_dataset["kwargs"]["path"] = self.additional_data
+            additional_dataset["kwargs"]["marks"] = [1, 2, 3, 4, 5]
+            additional_dataset["kwargs"]["dataset_type"] = "all"
+            additional_dataset = init_object(src.datasets, additional_dataset)
+            if self.train_marks == []:
+                train_dataset = additional_dataset
+            else:
+                train_dataset = torch.utils.data.ConcatDataset([train_dataset, additional_dataset])
+
         train_loader = torch.utils.data.DataLoader(
             train_dataset,
             batch_size=self.batch_size,

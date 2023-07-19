@@ -33,13 +33,12 @@ class Parser:
 
         # fix random seed for reproducibility
         fix_seed(config["seed"])
-        
 
         # init params for trainer
         trainer_params = dict()
 
         # send some params directly to trainer
-        for param in ["model_name", "dataset", "num_epochs", "batch_size", "run_id"]:
+        for param in ["model_name", "dataset", "train_marks", "additional_data", "num_epochs", "batch_size", "run_id"]:
             trainer_params[param] = config[param]
         trainer_params["dataset"]["kwargs"]["seed"] = config["seed"]
 

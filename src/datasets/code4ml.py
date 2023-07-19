@@ -2,7 +2,7 @@ from src.datasets import BaseDataset, load_data
 from sklearn.model_selection import train_test_split
 
 class code4ml(BaseDataset):
-    def __init__(self, tokenizer, dataset_type: str, num_classes: int, marks: list[int], seed: float):
+    def __init__(self, tokenizer, path: str, dataset_type: str, num_classes: int, marks: list[int], seed: float):
         """_summary_
 
         Args:
@@ -15,8 +15,11 @@ class code4ml(BaseDataset):
         self.dataset_type = dataset_type
         self.seed = seed
         self.num_classes = num_classes
-        data = load_data("data/code4ml/markup_data.csv", num_classes, marks)
+        self.path = path
+        data = load_data(path, num_classes, marks)
         self.snippets, self.labels =  data['code_block'].values, data['graph_vertex_id'].values
+        if self.dataset_type == "all":
+            return
         self.split_data()
     
     def split_data(self) -> None:
@@ -26,5 +29,5 @@ class code4ml(BaseDataset):
             self.snippets, self.labels = snippets_train, labels_train 
         elif self.dataset_type == "val":
             self.snippets, self.labels = snippets_val, labels_val 
-        else:
+        elif self.dataset_type == "test":
             self.snippets, self.labels = snippets_test, labels_test
