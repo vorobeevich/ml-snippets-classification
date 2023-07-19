@@ -72,7 +72,7 @@ class Trainer:
             self.optimizer.step()
             loss_sum += loss.item() * input_ids.shape[0]
             true_labels += labels.tolist()
-            pred_labels += F.softmax(logits, dim=-1).argmax(dim=-1).tolist()
+            pred_labels += logits.argmax(dim=-1).tolist()
 
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
@@ -90,7 +90,7 @@ class Trainer:
                 loss = self.loss_function(logits, labels)
                 loss_sum += loss.item() * input_ids.shape[0]
                 true_labels += labels.tolist()
-                pred_labels += F.softmax(logits, dim=-1).argmax(dim=-1).tolist()
+                pred_labels += logits.argmax(dim=-1).tolist()
 
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
