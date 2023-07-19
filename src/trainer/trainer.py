@@ -3,7 +3,6 @@ import logging
 from copy import deepcopy
 
 import torch.utils.data
-import torch.nn.functional as F
 import torch.nn as nn
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -13,7 +12,7 @@ from src.parser import Parser
 import src.datasets
 from src.utils import init_object
 
-from transformers.optimization import get_linear_scheduler_with_warmup
+from transformers.optimization import get_linear_schedule_with_warmup
 
 class Trainer:
     """Class for training the model in the domain generalization mode.
@@ -157,7 +156,7 @@ class Trainer:
 
         train_loader, val_loader, test_loader = self.create_loaders()
         self.init_training()
-        self.scheduler = get_linear_scheduler_with_warmup(self.optimizer, num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
         max_val_accuracy = 0
 
         for i in range(1, self.num_epochs + 1):
