@@ -1,0 +1,17 @@
+model_name: codebert
+
+dataset: 
+  name: code4ml
+  kwargs: 
+    marks: [5]
+    num_classes: 65
+
+optimizer:
+  name: AdamW
+  kwargs:
+    lr: 0.00005
+scheduler: null
+num_epochs: 1
+batch_size: 8
+seed: 42
+run_id: clear_data_codebert
