@@ -17,4 +17,4 @@ optimizer:
 num_epochs: 20
 batch_size: 8
 seed: 42
-run_id: augs_data_codebert_on_5
+run_id: augs_data_codebert_on_aftersplit_and_5
