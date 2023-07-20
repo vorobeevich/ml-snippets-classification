@@ -20,6 +20,7 @@ Install the libraries from the requirements.txt. Torch versions may differ depen
 Download the marked up data (7947 snippets), as well as the result of the partition algorithm from our Google Drive:
 
 ```chmod 777 /src/scripts/load_data.sh```
+
 ```./src/scripts/load_data.sh```
 
 You can download the full version of Code4ML dataset (marked up data, a total set of 2.5 million snippets, our model predictions on all data) on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7733823.svg)](https://doi.org/10.5281/zenodo.7733823)
