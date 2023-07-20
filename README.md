@@ -1,7 +1,7 @@
 # Machine learning code snippets semantic lassification
 This repository contains the source code of experiments from the paper **"Machine learning code snippets semantic classification"** (*Valeriy Berezovskiy*, *Anastasia Gorodilova*, *Ekaterina Trofimova*, *Andrey Ustyuzhanin*).
 
-# Usage
+# Preparation
 Start by cloning the repository: 
 
 ```git clone https://github.com/vorobeevich/ml-snippets-classification```
@@ -26,7 +26,7 @@ Download the marked up data (7947 snippets), as well as the result of the partit
 You can download the full version of Code4ML dataset (marked up data, a total set of 2.5 million snippets, our model predictions on all data) on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7733823.svg)](https://doi.org/10.5281/zenodo.7733823)
 
 Also, you can read the paper about Code4ML Dataset: [Code4ML: a Large-scale Dataset of annotated Machine Learning Code](https://arxiv.org/abs/2210.16018).
-# Training
+# Usage
 To reproduce any experiment from our article, it is enough to run the training script with the desired config.
 Note that the result is non-deterministic (even with a fixed random seed) on various platforms due to the nature of libraries such as torch.
 
