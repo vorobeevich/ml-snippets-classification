@@ -150,7 +150,7 @@ class Trainer:
         )
 
         with open(f"{self.checkpoint_dir}logs.txt", "w") as f:
-            print("Start training. '\n' F1 history:", file=f)
+            print("Start training. \n F1 history:", file=f)
 
         self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
@@ -179,7 +179,7 @@ class Trainer:
         test_metrics = self.inference_epoch_model(test_loader)
         logging.info(f"ERM training. Results on test: {test_metrics}")
         with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
-            print(f"Finish training. '\n' Test f1: {test_metrics['f1']}. Test accuracy: {test_metrics['accuracy']}.", file=f)
+            print(f"Finish training. \n Test f1: {test_metrics['f1']}. Test accuracy: {test_metrics['accuracy']}.", file=f)
             print(f"Test precision: {test_metrics['precision']}. Test recall: {test_metrics['recall']}", file=f)
 
 
