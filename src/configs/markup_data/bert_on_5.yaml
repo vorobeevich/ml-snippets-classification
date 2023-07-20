@@ -7,7 +7,7 @@ dataset:
     marks: [5]
     num_classes: 65
 
-train_marks: [4] # use only for train, for val and test only mark 5 data is used
+train_marks: [5] # use only for train, for val and test only mark 5 data is used
 additional_data: null
 
 optimizer:
