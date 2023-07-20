@@ -173,15 +173,15 @@ class Trainer:
                 self.scheduler.step()
 
             with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
-                print(f"Epoch number {i}. Train f1: {train_metrics['f1']}. Val f1: {val_metrics['f1']}. " + \
-                      f"Train loss: {train_metrics['loss']}. Val loss: {val_metrics['loss']}", file=f)
+                print(f"Epoch number {i}. Train f1: {train_metrics['f1']} Val f1: {val_metrics['f1']} " + \
+                      f"Train loss: {train_metrics['loss']} Val loss: {val_metrics['loss']}", file=f)
 
         self.load_checkpoint()
         test_metrics = self.inference_epoch_model(test_loader)
         logging.info(f"ERM training. Results on test: {test_metrics}")
         with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
-            print(f"Finish training. \nTest f1: {test_metrics['f1']}. Test accuracy: {test_metrics['accuracy']}.", file=f)
-            print(f"Test precision: {test_metrics['precision']}. Test recall: {test_metrics['recall']}", file=f)
+            print(f"Finish training. \nTest f1: {test_metrics['f1']} Test accuracy: {test_metrics['accuracy']}", file=f)
+            print(f"Test precision: {test_metrics['precision']} Test recall: {test_metrics['recall']}", file=f)
 
 
     def save_checkpoint(self):
