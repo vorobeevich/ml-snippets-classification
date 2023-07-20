@@ -2,8 +2,11 @@
 This repository contains the source code of experiments from the paper **"Machine learning code snippets semantic classification"** (*Valeriy Berezovskiy*, *Anastasia Gorodilova*, *Ekaterina Trofimova*, *Andrey Ustyuzhanin*).
 
 # Usage
-Start by cloning the repository: git clone <https://github.com/vorobeevich/ml-snippets-classification>.
-We **highly** recommend using conda for experiments: <https://www.anaconda.com/download>.
+Start by cloning the repository: 
+
+```git clone https://github.com/vorobeevich/ml-snippets-classification```
+
+We **highly** recommend using conda for experiments: [Anaconda](https://www.anaconda.com/download).
 
 After installation, make a new environment:
 
