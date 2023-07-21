@@ -36,7 +36,7 @@ class Splitter:
     def predict_subsnippet_class(self, snippet: str) -> int:
         """Returns the class of the snippet predicted by the model."""
         return int(self.model(*self.processing(snippet))
-                   ['logits'].argmax(dim=-1).view((-1, 1)).item())
+                   ['logits'].argmax(dim=-1).view((-1, 1)).item()) + 1
 
     def check_splitted_substr(self, substr: str) -> bool:
         """Checks that the string is a valid set of code without unclosed parentheses."""
