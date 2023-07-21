@@ -5,7 +5,7 @@ dataset:
   kwargs: 
     path: data/code4ml/markup_data.csv
     marks: [5]
-    num_classes: 65
+    num_classes: 88
 
 train_marks: [] # use only for train, for val and test only mark 5 data is used
 additional_data: data/code4ml/after_split_data.csv
@@ -17,4 +17,4 @@ optimizer:
 num_epochs: 50
 batch_size: 32
 seed: 42
-run_id: augs_data_codebert_on_5
+run_id: augs_data_codebert_on_aftersplit
