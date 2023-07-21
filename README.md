@@ -14,18 +14,18 @@ After installation, make a new environment:
 
 ```conda activate cssc```
 
-Install the libraries from the requirements.txt. Torch versions may differ depending on your GPU: [Start Locally | PyTorch](https://pytorch.org/get-started/locally/)
+Install the libraries from the **requirements.txt**. Torch versions may differ depending on your GPU: [Start Locally | PyTorch](https://pytorch.org/get-started/locally/)
 
 # Data 
-Download the marked up data (7947 snippets), as well as the result of the partition algorithm from our Google Drive:
+Download the marked up data (**7947 snippets**), as well as the result of the partition algorithm from our Google Drive:
 
 ```chmod 777 /src/scripts/load_data.sh```
 
 ```./src/scripts/load_data.sh```
 
-You can download the full version of Code4ML dataset (marked up data, a total set of 2.5 million snippets, our model predictions on all data) on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7733823.svg)](https://doi.org/10.5281/zenodo.7733823)
+You can download the full version of **Code4ML** dataset (marked up data, a total set of 2.5 million snippets, our model predictions on all data) on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7733823.svg)](https://doi.org/10.5281/zenodo.7733823)
 
-Also, you can read the paper about Code4ML Dataset: [Code4ML: a Large-scale Dataset of annotated Machine Learning Code](https://arxiv.org/abs/2210.16018).
+Also, you can read the paper about **Code4ML** Dataset: [Code4ML: a Large-scale Dataset of annotated Machine Learning Code](https://arxiv.org/abs/2210.16018).
 # Usage
 To reproduce any experiment from our article, it is enough to run the training script with the desired config.
 Note that the result is non-deterministic (even with a fixed random seed) on various platforms due to the nature of libraries such as torch.
