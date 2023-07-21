@@ -79,7 +79,7 @@ class Trainer:
             loss_sum += loss.item() * input_ids.shape[0]
             true_labels += labels.tolist()
             pred_labels += logits.argmax(dim=-1).tolist()
-            pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0]), loss.item())
+            pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
         return res
@@ -97,7 +97,7 @@ class Trainer:
                 loss_sum += loss.item() * input_ids.shape[0]
                 true_labels += labels.tolist()
                 pred_labels += logits.argmax(dim=-1).tolist()
-                pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0]).item(), loss.item())
+                pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
 
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
