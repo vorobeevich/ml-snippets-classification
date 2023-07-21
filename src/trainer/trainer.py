@@ -51,10 +51,10 @@ class Trainer:
     def calculate_metrics(self, true_labels, pred_labels):
         res = {}
         res["accuracy"] = accuracy_score(true_labels, pred_labels)
-        res["f1"] = precision_score(true_labels, pred_labels, average="weighted")
+        res["f1"] = f1_score(true_labels, pred_labels, average="weighted")
         for metric_name, metric in zip(["recall", "precision"], [recall_score, precision_score]):
             res[metric_name] = metric(true_labels, pred_labels, average="weighted", zero_division=0)
-        return res 
+        return res
 
     def init_training(self):
         self.tokenizer = Parser.init_tokenizer(self.model_name)
