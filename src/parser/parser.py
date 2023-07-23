@@ -5,7 +5,6 @@ from datetime import datetime
 from copy import deepcopy
 import typing as tp
 
-import torch.nn as nn
 import torch
 
 from src.utils import fix_seed, get_device, init_object
@@ -64,22 +63,25 @@ class Parser:
         # init device for training on it
         trainer_params["device"] = get_device()
         return trainer_params
-    
+
     @staticmethod
     def init_tokenizer(model_name: str):
         if model_name == "codebert":
-            tokenizer = RobertaTokenizer.from_pretrained("microsoft/codebert-base")
+            tokenizer = RobertaTokenizer.from_pretrained(
+                "microsoft/codebert-base")
         else:
             tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         return tokenizer
-    
+
     @staticmethod
     def init_model(model_name: str, num_classes: int, device: torch.device):
         # init model params
         if model_name == "codebert":
-            model = RobertaForSequenceClassification.from_pretrained("microsoft/codebert-base", num_labels=num_classes)
+            model = RobertaForSequenceClassification.from_pretrained(
+                "microsoft/codebert-base", num_labels=num_classes)
         else:
-            model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=num_classes)
+            model = BertForSequenceClassification.from_pretrained(
+                "bert-base-uncased", num_labels=num_classes)
 
         # prepare for GPU training
         model.to(device)

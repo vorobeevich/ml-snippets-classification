@@ -1,6 +1,6 @@
 import torch
-import pandas as pd
-    
+
+
 class BaseDataset(torch.utils.data.Dataset):
     def __init__(self, tokenizer) -> None:
         self.tokenizer = tokenizer
@@ -23,7 +23,9 @@ class BaseDataset(torch.utils.data.Dataset):
             tuple[torch.Tensor, torch.Tensor, float]:
                 tokens, attention_mask, label
         """
-        snippet = self.tokenizer.batch_encode_plus([self.snippets[ind]], add_special_tokens=True, padding='max_length', truncation=True, return_tensors='pt', max_length=512)
-        input_ids, attention_mask = snippet['input_ids'].squeeze(0), snippet['attention_mask'].squeeze(0)
+        snippet = self.tokenizer.batch_encode_plus(
+            [self.snippets[ind]], add_special_tokens=True, padding='max_length', truncation=True, return_tensors='pt', max_length=512)
+        input_ids, attention_mask = snippet['input_ids'].squeeze(
+            0), snippet['attention_mask'].squeeze(0)
         label = self.labels[ind]
         return input_ids, attention_mask, label

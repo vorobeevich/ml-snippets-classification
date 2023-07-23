@@ -14,6 +14,7 @@ from src.utils import init_object
 
 from transformers.optimization import get_linear_schedule_with_warmup
 
+
 class Trainer:
     """Class for training the model in the domain generalization mode.
     """
@@ -53,13 +54,15 @@ class Trainer:
         res["accuracy"] = accuracy_score(true_labels, pred_labels)
         res["f1"] = f1_score(true_labels, pred_labels, average="weighted")
         for metric_name, metric in zip(["recall", "precision"], [recall_score, precision_score]):
-            res[metric_name] = metric(true_labels, pred_labels, average="weighted", zero_division=0)
+            res[metric_name] = metric(
+                true_labels, pred_labels, average="weighted", zero_division=0)
         return res
 
     def init_training(self):
         self.tokenizer = Parser.init_tokenizer(self.model_name)
         self.dataset["kwargs"]["tokenizer"] = self.tokenizer
-        self.model = Parser.init_model(self.model_name, self.dataset["kwargs"]["num_classes"], self.device)
+        self.model = Parser.init_model(
+            self.model_name, self.dataset["kwargs"]["num_classes"], self.device)
         self.optimizer = Parser.init_optimizer(
             self.optimizer_config, self.model)
 
@@ -69,7 +72,8 @@ class Trainer:
         true_labels, pred_labels = [], []
         pbar = tqdm(loader)
         for input_ids, attention_mask, labels in pbar:
-            input_ids, attention_mask, labels = input_ids.to(self.device), attention_mask.to(self.device), labels.to(self.device)
+            input_ids, attention_mask, labels = input_ids.to(
+                self.device), attention_mask.to(self.device), labels.to(self.device)
             logits = self.model(input_ids, attention_mask)["logits"]
             loss = self.loss_function(logits, labels)
             self.optimizer.zero_grad()
@@ -79,7 +83,8 @@ class Trainer:
             loss_sum += loss.item() * input_ids.shape[0]
             true_labels += labels.tolist()
             pred_labels += logits.argmax(dim=-1).tolist()
-            pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
+            pbar.set_description("Accuracy on batch %f loss on batch %f" % (
+                (logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
         return res
@@ -91,32 +96,36 @@ class Trainer:
             true_labels, pred_labels = [], []
             pbar = tqdm(loader)
             for input_ids, attention_mask, labels in pbar:
-                input_ids, attention_mask, labels = input_ids.to(self.device), attention_mask.to(self.device), labels.to(self.device)
+                input_ids, attention_mask, labels = input_ids.to(
+                    self.device), attention_mask.to(self.device), labels.to(self.device)
                 logits = self.model(input_ids, attention_mask)["logits"]
                 loss = self.loss_function(logits, labels)
                 loss_sum += loss.item() * input_ids.shape[0]
                 true_labels += labels.tolist()
                 pred_labels += logits.argmax(dim=-1).tolist()
-                pbar.set_description("Accuracy on batch %f loss on batch %f" % ((logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
+                pbar.set_description("Accuracy on batch %f loss on batch %f" % (
+                    (logits.argmax(dim=-1) == labels).sum().item() / labels.shape[0], loss.item()))
 
         res = self.calculate_metrics(true_labels, pred_labels)
         res["loss"] = loss_sum / len(loader.dataset)
         return res
 
-
     def create_loaders(self):
-        train_dataset, val_dataset, test_dataset = create_datasets(self.dataset)
+        train_dataset, val_dataset, test_dataset = create_datasets(
+            self.dataset)
         assert self.train_marks != [] or self.additional_data, "You must choose data to train"
-        if self.train_marks != [5] and self.train_marks != []:  
+        if self.train_marks != [5] and self.train_marks != []:
             new_train_dataset = deepcopy(self.dataset)
-            new_train_dataset["kwargs"]["marks"] = [elem for elem in self.train_marks if elem != 5]
+            new_train_dataset["kwargs"]["marks"] = [
+                elem for elem in self.train_marks if elem != 5]
             new_train_dataset["kwargs"]["dataset_type"] = "all"
             new_train_dataset = init_object(src.datasets, new_train_dataset)
             if 5 in self.train_marks:
-                train_dataset = torch.utils.data.ConcatDataset([train_dataset, new_train_dataset])
+                train_dataset = torch.utils.data.ConcatDataset(
+                    [train_dataset, new_train_dataset])
             else:
                 train_dataset = new_train_dataset
-        
+
         if self.additional_data:
             additional_dataset = deepcopy(self.dataset)
             additional_dataset["kwargs"]["path"] = self.additional_data
@@ -126,7 +135,8 @@ class Trainer:
             if self.train_marks == []:
                 train_dataset = additional_dataset
             else:
-                train_dataset = torch.utils.data.ConcatDataset([train_dataset, additional_dataset])
+                train_dataset = torch.utils.data.ConcatDataset(
+                    [train_dataset, additional_dataset])
 
         train_loader = torch.utils.data.DataLoader(
             train_dataset,
@@ -155,17 +165,20 @@ class Trainer:
 
         self.init_training()
         train_loader, val_loader, test_loader = self.create_loaders()
-        
-        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=int(len(train_loader.dataset) / self.batch_size) * int(self.num_epochs / 10), num_training_steps = int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
+
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=int(len(train_loader.dataset) / self.batch_size) * int(
+            self.num_epochs / 10), num_training_steps=int(len(train_loader.dataset) / self.batch_size) * self.num_epochs)
         max_val_accuracy = 0
 
         for i in range(1, self.num_epochs + 1):
             logging.info(f"Start epoch number {i}")
             train_metrics = self.train_epoch_model(train_loader)
-            logging.info(f"Epoch number {i} is over. Metrics on train: {train_metrics}")
+            logging.info(
+                f"Epoch number {i} is over. Metrics on train: {train_metrics}")
             val_metrics = self.inference_epoch_model(val_loader)
-            logging.info(f"Epoch number {i} is over. Metrics on val: {val_metrics}")
-            
+            logging.info(
+                f"Epoch number {i} is over. Metrics on val: {val_metrics}")
+
             if val_metrics["f1"] > max_val_accuracy:
                 max_val_accuracy = val_metrics["f1"]
                 self.save_checkpoint()
@@ -174,16 +187,17 @@ class Trainer:
                 self.scheduler.step()
 
             with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
-                print(f"Epoch number {i}. Train f1: {train_metrics['f1']}. Val f1: {val_metrics['f1']}. " + \
+                print(f"Epoch number {i}. Train f1: {train_metrics['f1']}. Val f1: {val_metrics['f1']}. " +
                       f"Train loss: {train_metrics['loss']}. Val loss: {val_metrics['loss']}", file=f)
 
         self.load_checkpoint()
         test_metrics = self.inference_epoch_model(test_loader)
         logging.info(f"ERM training. Results on test: {test_metrics}")
         with open(f"{self.checkpoint_dir}logs.txt", "a") as f:
-            print(f"Finish training. \nTest f1: {test_metrics['f1']}. Test accuracy: {test_metrics['accuracy']}.", file=f)
-            print(f"Test precision: {test_metrics['precision']}. Test recall: {test_metrics['recall']}.", file=f)
-
+            print(
+                f"Finish training. \nTest f1: {test_metrics['f1']}. Test accuracy: {test_metrics['accuracy']}.", file=f)
+            print(
+                f"Test precision: {test_metrics['precision']}. Test recall: {test_metrics['recall']}.", file=f)
 
     def save_checkpoint(self):
         state = {
@@ -196,7 +210,8 @@ class Trainer:
         torch.save(state, path)
 
     def load_checkpoint(self):
-        self.model = Parser.init_model(self.model_name, self.dataset["kwargs"]["num_classes"], self.device)
+        self.model = Parser.init_model(
+            self.model_name, self.dataset["kwargs"]["num_classes"], self.device)
         model_path = f"{self.checkpoint_dir}checkpoint_name_{self.model_name}_best.pth"
         checkpoint = torch.load(model_path)
         self.model.load_state_dict(checkpoint["model"])

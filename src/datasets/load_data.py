@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def load_data(path: str, num_classes: int, marks: list[int]) -> pd.DataFrame:
     """Loads dataset.
 
@@ -17,7 +18,8 @@ def load_data(path: str, num_classes: int, marks: list[int]) -> pd.DataFrame:
     data = data[(data['graph_vertex_id'] != 53) &
                 (data['graph_vertex_id'] != 84)]
     # classes in code4ml are in [1, 88]
-    assert data['graph_vertex_id'].max() <= num_classes, f"Set num_classes in dataset to {data['graph_vertex_id'].max()}"
+    assert data['graph_vertex_id'].max(
+    ) <= num_classes, f"Set num_classes in dataset to {data['graph_vertex_id'].max()}"
     data['graph_vertex_id'] = data['graph_vertex_id'] - 1
     data['graph_vertex_id'] = data['graph_vertex_id'].astype(int)
     return data

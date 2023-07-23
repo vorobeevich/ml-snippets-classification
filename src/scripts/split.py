@@ -75,7 +75,7 @@ from src.preprocessing import preprocess_snippet
 from src.datasets import load_data
 from src.utils import get_device
 from src.parser import Parser
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
+from transformers import RobertaTokenizer
 
 
 logging.basicConfig(

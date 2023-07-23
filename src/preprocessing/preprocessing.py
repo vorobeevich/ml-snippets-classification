@@ -11,6 +11,7 @@ def from_bytes_to_str(snippet: str) -> str:
         snippet = snippet[2: n - 1]
     return snippet
 
+
 def correct_special_symbols(snippet: str) -> str:
     """Fixes special characters."""
     snippet = snippet.replace('\\n', '\n')
@@ -22,10 +23,12 @@ def correct_special_symbols(snippet: str) -> str:
     snippet = snippet.replace('\"\"\"', ' \"\"\" ')
     return snippet
 
+
 def delete_short_comments(snippet: str) -> str:
     """Deletes short comments."""
     snippet = re.sub('#.*', '', snippet)
     return snippet
+
 
 def delete_imports(snippet: str) -> str:
     """Deletes imports modules from code."""
@@ -35,11 +38,13 @@ def delete_imports(snippet: str) -> str:
         snippet = im_snippet
     return snippet
 
+
 def add_spaces(snippet: str, symbols: List[str]) -> str:
     """Adds spaces to the beginning and end of each character."""
     for symb in symbols:
         snippet = snippet.replace(symb, ' ' + symb + ' ')
     return snippet
+
 
 def delete_empty_lines(snippet: str) -> List[str]:
     """Deletes empty lines in snippet."""
@@ -59,6 +64,7 @@ def delete_empty_lines(snippet: str) -> List[str]:
     if len(new_snippet) > 1 and new_snippet[0] == '\n':
         new_snippet = new_snippet[1:]
     return new_snippet
+
 
 def delete_long_comments(snippet: List[str]) -> List[str]:
     """Deletes long comments."""
@@ -81,9 +87,11 @@ def delete_long_comments(snippet: List[str]) -> List[str]:
         res_snippet = ['\n']
     return res_snippet
 
+
 def preprocess_snippet(snippet: str, format='list') -> Union[str, List[str]]:
     """Performs string preprocessing."""
-    functions = [from_bytes_to_str, correct_special_symbols, delete_short_comments, delete_imports]
+    functions = [from_bytes_to_str, correct_special_symbols,
+                 delete_short_comments, delete_imports]
     for function in functions:
         snippet = function(snippet)
     to_replace = ['.', '(', ')', '\n', '[', ']', '_']

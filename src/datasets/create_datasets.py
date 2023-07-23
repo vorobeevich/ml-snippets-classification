@@ -10,7 +10,8 @@ def create_datasets(dataset):
         dataset), deepcopy(
         dataset)
 
-    train_dataset["kwargs"]["dataset_type"], val_dataset["kwargs"]["dataset_type"], test_dataset["kwargs"]["dataset_type"] = "train", "val", "test"
+    train_dataset["kwargs"]["dataset_type"], val_dataset["kwargs"][
+        "dataset_type"], test_dataset["kwargs"]["dataset_type"] = "train", "val", "test"
 
     train_dataset = init_object(src.datasets, train_dataset)
     val_dataset = init_object(src.datasets, val_dataset)
