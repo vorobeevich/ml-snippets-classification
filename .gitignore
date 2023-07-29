@@ -1,3 +1,4 @@
 *.pyc
 data/*
 saved/*
+*/.ipynb_checkpoints/*
