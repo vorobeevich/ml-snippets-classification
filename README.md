@@ -28,7 +28,7 @@ You can download the full version of **Code4ML** dataset (marked up data, a tota
 
 Also, you can read the paper about **Code4ML** Dataset: [Code4ML: a Large-scale Dataset of annotated Machine Learning Code](https://arxiv.org/abs/2210.16018).
 # Usage
-To reproduce any experiment from our article, it is enough to run the training script with the desired config.
+To reproduce any experiment from our paper, it is enough to run the training script with the desired config.
 Note that the result is non-deterministic (even with a fixed random seed) on various platforms due to the nature of libraries such as torch.
 
 ```python src/scripts/train.py --device [ID OF CUDA DEVICE] --config src/configs/[CHOOSE CONFIG TO RUN]```
